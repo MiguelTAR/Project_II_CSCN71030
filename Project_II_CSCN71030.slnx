@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Project_II_CSCN71030/Project_II_CSCN71030.vcxproj" />
+</Solution>
