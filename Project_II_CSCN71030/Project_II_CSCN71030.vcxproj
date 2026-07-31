@@ -139,6 +139,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Exit.c" />
     <ClCompile Include="match.c" />
     <ClCompile Include="match_sifan.c" />
     <ClCompile Include="match_zuwair.c" />
