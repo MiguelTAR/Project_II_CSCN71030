@@ -37,7 +37,6 @@ void cleanupMemory(Team* teams
     );
 
 void exitSim(Team* teams,
-    Match* history,
     //,Bracket* bracket,
     ChampionshipRecord *record
     );
