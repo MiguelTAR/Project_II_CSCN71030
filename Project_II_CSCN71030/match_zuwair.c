@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include "match.h"
+
+//  Group C 
+void simulate_group_c(Team group[4])
+{
+    Match match;
+
+    printf("\n========== GROUP C ==========\n");
+
+    simulate_match(&group[0], &group[1], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[0], &group[2], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[0], &group[3], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[1], &group[2], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[1], &group[3], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[2], &group[3], &match);
+    print_match_results(&match);
+}
+
+
+// Group I 
+
+void simulate_group_i(Team group[4])
+{
+    Match match;
+
+    printf("\n========== GROUP I ==========\n");
+
+    simulate_match(&group[0], &group[1], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[0], &group[2], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[0], &group[3], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[1], &group[2], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[1], &group[3], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[2], &group[3], &match);
+    print_match_results(&match);
+
+    printf("\nFinal Group I Statistics\n");
+    print_all(group, 4);
+}
+
+// Group L 
+
+void simulate_group_l(Team group[4])
+{
+    Match match;
+
+    printf("\n========== GROUP L ==========\n");
+
+    simulate_match(&group[0], &group[1], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[0], &group[2], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[0], &group[3], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[1], &group[2], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[1], &group[3], &match);
+    print_match_results(&match);
+
+    simulate_match(&group[2], &group[3], &match);
+    print_match_results(&match);
+
+    printf("\nFinal Group L Statistics\n");
+    print_all(group, 4);
+}
