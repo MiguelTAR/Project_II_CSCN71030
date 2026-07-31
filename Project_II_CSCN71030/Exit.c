@@ -13,6 +13,31 @@ void printChampion(const Team* champion) {
         champion->goal_for, champion->goal_against);
 }
 
+ChampionshipRecord buildChampionshipPath(Match fullHistory[], int numMatches,
+    const Team* champion) {
+    ChampionshipRecord record = { champion, NULL, 0 };
+    int count = 0;
+
+    for (int i = 0; i < numMatches; i++)
+        if (fullHistory[i].team1 == champion || fullHistory[i].team2 == champion)
+            count++;
+
+    record.path = malloc(count * sizeof(Match));
+    if (record.path == NULL) {
+        printf("WARNING: Could not allocate championship path.\n");
+        return record;
+    }
+
+    int j = 0;
+    for (int i = 0; i < numMatches; i++) {
+        if (fullHistory[i].team1 == champion || fullHistory[i].team2 == champion) {
+            record.path[j++] = fullHistory[i];
+        }
+    }
+    record.pathLength = count;
+    return record;
+}
+
 void freeMatchData(ChampionshipRecord* record) {
     free(record->path);
     record->path = NULL;
