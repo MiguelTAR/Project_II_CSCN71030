@@ -24,6 +24,9 @@
     <ClCompile Include="match_zuwair.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="match_sifan.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Team.h">

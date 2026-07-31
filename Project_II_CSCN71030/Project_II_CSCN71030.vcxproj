@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="match.c" />
+    <ClCompile Include="match_sifan.c" />
     <ClCompile Include="match_zuwair.c" />
     <ClCompile Include="Team.c" />
   </ItemGroup>
