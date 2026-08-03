@@ -140,10 +140,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FileIO.c" />
+    <ClCompile Include="main.c" />
     <ClCompile Include="Team.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileIO.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Team.h" />
   </ItemGroup>
   <ItemGroup>
