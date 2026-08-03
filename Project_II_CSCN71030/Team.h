@@ -5,7 +5,7 @@ typedef struct Team {
 	char name[50];
 	char group;
 
-
+	int matches_played;
 	int wins;
 	int losses;
 	int draws;
