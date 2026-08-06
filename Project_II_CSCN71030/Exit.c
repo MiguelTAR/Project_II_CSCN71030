@@ -8,7 +8,7 @@ void printChampion(const Team* champion) {
         return;
     }
     printf("=== WORLD CHAMPION: %s (Group %c) ===\n", champion->name, champion->group);
-    printf("Record: %dW-%dD-%dL, GF:%d GA:%d GD:%d\n",
+    printf("Record: %dW-%dD-%dL\n",
         champion->wins, champion->draws, champion->losses);
 }
 
@@ -35,6 +35,22 @@ ChampionshipRecord buildChampionshipPath(Match fullHistory[], int numMatches,
     }
     record.pathLength = count;
     return record;
+}
+
+void printKnResults(const Bracket* bracket)
+{
+    const char* roundNames[5] = {
+        "Round of 32", "Round of 16", "Quarterfinal", "Semifinal", "Final"
+    };
+
+    for (int r = 0; r < 5; r++) {
+        printf("%s\n", roundNames[r]);
+        for (int i = 0; i < bracket->roundCount[r]; i++) {
+            Match m = bracket->rounds[r][i];
+            printf("%s %d - %d %s\n", m.team1->name, m.team1Score, m.team2Score, m.team2->name);
+        }
+        printf("\n");
+    }
 }
 
 void printChampionshipPath(const ChampionshipRecord* record) {
@@ -87,40 +103,40 @@ int promptUserRestart(void) {
     return choice;
 }
 
-void resetSimData(Team teams[], int numTeams//, Bracket* bracket
+void resetSimData(Team teams[], int numTeams, Bracket* bracket
 ) {
     for (int i = 0; i < numTeams; i++) {
         teams[i].wins = teams[i].draws = teams[i].losses = 0;
         teams[i].goal_for = teams[i].goal_against = 0;
     }
-    /*for (int r = 0; r < 5; r++) {
+    for (int r = 0; r < 5; r++) {
         free(bracket->rounds[r]);
         bracket->rounds[r] = NULL;
         bracket->roundCount[r] = 0;
     }
-    bracket->champion = NULL;*/
+    bracket->champion = NULL;
 }
 
-/*void cleanupMemory(Team* teams, Bracket* bracket) {
+void cleanupMemory(Team* teams, Bracket* bracket) {
     for (int r = 0; r < 5; r++) {
         free(bracket->rounds[r]);
         bracket->rounds[r] = NULL;
     }
     free(teams);
-}*/
+}
 
 void exitSim(Team* teams
-    , //Bracket* bracket, 
+    ,Bracket* bracket, 
     ChampionshipRecord* record) {
     freeMatchData(record);
-    cleanupMemory(teams//, bracket
+    cleanupMemory(teams, bracket
     );
     printf("Thanks for playing. Goodbye!\n");
     exit(0);
 }
 
-void restartSim(Team teams[], int numTeams//, Bracket* bracket
+void restartSim(Team teams[], int numTeams, Bracket* bracket
     ) {
-    resetSimData(teams, numTeams//, bracket
+    resetSimData(teams, numTeams, bracket
     );
 }

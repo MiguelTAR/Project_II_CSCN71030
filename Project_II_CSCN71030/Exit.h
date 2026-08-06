@@ -13,9 +13,9 @@ typedef struct {
 } ChampionshipRecord;
 
 
-void printChampion(Team* champion);
+void printChampion(const Team* champion);
 
-void printKnResults(Team teams[], int numTeams);
+void printKnResults(const Bracket *bracket);
 
 ChampionshipRecord buildChampionshipPath(Match fullHistory[], int numMatches,
     const Team* champion);
@@ -29,21 +29,21 @@ int promptUserRestart(void);
 
 void resetSimData(Team teams[],
     int numTeams
-    //Bracket* bracket,
+    Bracket* bracket,
     );
 
 void cleanupMemory(Team* teams
-    //,Bracket* bracket
+    Bracket* bracket
     );
 
 void exitSim(Team* teams,
-    //,Bracket* bracket,
+    Bracket* bracket,
     ChampionshipRecord *record
     );
 
 void restartSim(Team teams[],
     int numTeams
-    //Bracket* bracket,
+    Bracket* bracket,
    );
 
 #endif
