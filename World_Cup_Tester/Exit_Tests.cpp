@@ -70,7 +70,7 @@ namespace ExitUtilityTests
             strcpy_s(champion.name, "Canada");
             champion.group = 'A';
             champion.wins = 6; champion.draws = 1; champion.losses = 0;
-            champion.goalsFor = 14; champion.goalsAgainst = 3; champion.goalDiff = 11;
+            champion.goal_for = 14; champion.goal_against = 3;
 
             std::string output = captureStdout([&]() { printChampion(&champion); });
 
