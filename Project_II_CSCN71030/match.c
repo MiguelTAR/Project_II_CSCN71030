@@ -24,9 +24,16 @@ void simulate_match(Team* team1, Team* team2, Match* match)
     do
     {
         printf("Enter your choice: ");
-        scanf("%d", &match->prediction);
 
-        if (match->prediction < 1 || match->prediction > 3)
+        if (scanf_s("%d", &match->prediction) != 1)
+        {
+            printf("Invalid choice. Please enter 1, 2, or 3.\n");
+
+            while (getchar() != '\n');
+
+            match->prediction = 0;
+        }
+        else if (match->prediction < 1 || match->prediction > 3)
         {
             printf("Invalid choice. Please enter 1, 2, or 3.\n");
         }
@@ -61,32 +68,23 @@ void simulate_match(Team* team1, Team* team2, Match* match)
 //------------------------------------------------------------
 void update_team_stats(Match* match)
 {
-    // Update goals scored and goals conceded
-    match->team1->goal_for += match->team1Score;
-    match->team1->goal_against += match->team2Score;
+    match->team1->matches_played++;
+    match->team2->matches_played++;
 
-    match->team2->goal_for += match->team2Score;
-    match->team2->goal_against += match->team1Score;
-
-    // Update wins, losses and draws
-    if (prediction == 1)
+    if (match->team1Score > match->team2Score)
     {
-        // Team 1 wins
-        team1Score = (rand() % 5) + 1;   // 1-5
-        team2Score = rand() % team1Score;
+        match->team1->wins++;
+        match->team2->losses++;
     }
-    else if (prediction == 2)
+    else if (match->team2Score > match->team1Score)
     {
-        // Team 2 wins
-        team2Score = (rand() % 5) + 1;
-        team1Score = rand() % team2Score;
+        match->team2->wins++;
+        match->team1->losses++;
     }
     else
     {
-        // Draw
-        int score = rand() % 6;
-        team1Score = score;
-        team2Score = score;
+        match->team1->draws++;
+        match->team2->draws++;
     }
 }
 
