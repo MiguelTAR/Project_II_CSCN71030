@@ -2,21 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include "main.h"
 #include "Team.h"
 #include "FileIO.h"
 #include "match.h"
 #include "bracket.h"
-//#include "Exit.h"
+#include "Exit.h"
 
 static SystemContext *g_ctx = NULL;
 
 static bool initialize_system(const char* logFileName);
-static void cleanup_system(void);
 static void displayMainMenu(void);
 static bool is_valid_selection(int selection);
-static void dispatchSelection(int selection, int* running);
+static void dispatchSelection(int selection, bool* running);
 
 static void load_teams(void);
 static void predict_match(void);
@@ -26,6 +26,8 @@ static void simulate_tournament(void);
 int main(int argc, char *argv[])
 {
     const char* logFileName = DEFAULT_LOG_FILE;
+
+    srand((unsigned int)time(NULL));
 
     if (argc > 1) {
         if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
@@ -37,7 +39,7 @@ int main(int argc, char *argv[])
 
     /* REQ-SYS-060: Set up resources before anything else runs */
     if (!initialize_system(logFileName)) {
-        fprintf(stderr, "System initialization failed.\n");
+        printf("System initialization failed.\n");
         return EXIT_FAILURE;
     }
 
@@ -75,11 +77,6 @@ static bool initilialize_system(const char* logFileName)
     snprintf(g_ctx->logFileName, MAX_LOG_PATH_LEN, "%s", logFileName);
 
     /* REQ-SYS-060: Supports both reading and appending on one handle */
-    g_ctx->logFile = fopen_s(&g_ctx->logFile, g_ctx->logFileName, "a+");
-    if (g_ctx->logFile == NULL) {
-        fprintf(stderr, "Could not open log file '%s'.\n", g_ctx->logFileName);
-        return false;
-    }
 
     fprintf(g_ctx->logFile, "\n=== Session started ===");
     fflush(g_ctx->logFile);
@@ -95,24 +92,6 @@ static bool initilialize_system(const char* logFileName)
     printf("Initialized successfully.\n");
     return true;
 
-}
-
-static void cleanup_system(void)
-{
-    if (g_ctx == NULL) {
-        return;
-    }
-
-    if (g_ctx->logFile != NULL) {
-        fprintf(g_ctx->logFile, "=== Session ended ===\n");
-        fclose(g_ctx->logFile);
-        g_ctx->logFile = NULL;
-    }
-
-    free_teams(g_ctx->teams);
-    g_ctx->teams = NULL;
-    free(g_ctx);
-    g_ctx = NULL;
 }
 
 
@@ -162,6 +141,29 @@ static void load_teams(void)
 }
 
 
+static void predict_match(void)
+{
+    int index1 = 0;
+    int index2 = 0;
+    Match match;
+
+    if (g_ctx == NULL || g_ctx->teams == NULL || g_ctx->teamCount < 2) {
+        printf("Need at least 2 teams loaded to predict a match.\n");
+        return;
+    }
+
+    index1 = rand() % 32;
+    do {
+        index2 = rand() % 32;
+    } while (index2 == index1);
+
+    printf("\nRandom matchup: %s vs %s\n",
+        g_ctx->teams[index1 - 1].name, g_ctx->teams[index2 - 1].name);
+
+    simulate_match(&g_ctx->teams[index1 - 1], &g_ctx->teams[index2 - 1], &match);
+}
+
+
 static void simulate_tournament(void)
 {
     Bracket bracket;
@@ -189,7 +191,7 @@ static void simulate_tournament(void)
     }
 }
 
-static void dispatchSelection(int selection, int* running)
+static void dispatchSelection(int selection, bool* running)
 {
     switch (selection) {
     case 1:

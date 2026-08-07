@@ -61,7 +61,7 @@ void initialize_bracket(Team teams[], int teamCount, Bracket* bracket)
             m->team2 = &bracket->teams[high];
             m->team1Score = 0;
             m->team2Score = 0;
-            m->prediction = NULL;
+            m->prediction = 0;
 
             matchIndex++;
             low++;
@@ -84,13 +84,12 @@ void initialize_bracket(Team teams[], int teamCount, Bracket* bracket)
 void advance_winner(Bracket* bracket, Match* match)
 {
     int    round;
-    int    i;
     int    slot = -1;
     int    foundRound = -1;
     Round* currentRound;
     Round* nextRound;
     Match* nextMatch;
-    Team* winner;
+    Team*  winner;
 
     if (bracket == NULL || match == NULL) {
         return;
@@ -117,7 +116,7 @@ void advance_winner(Bracket* bracket, Match* match)
     currentRound = &bracket->rounds[foundRound];
 
     if (!currentRound->played[slot]) {
-        printf("Match has not been played yet. \n");
+        printf("Match has not been played yet.\n");
         return;
     }
 
@@ -128,7 +127,7 @@ void advance_winner(Bracket* bracket, Match* match)
     }
 
     if (foundRound >= FINAL_ROUND) {
-        
+        bracket->champion = winner;
         return;
     }
 
@@ -181,7 +180,6 @@ void play_knockout_round(Bracket* bracket, int round)
             printf("Advances automatically. \n");
 
         } else {
-
             /* Randomly roll scores until someone actually wins */
             do {
                 m->team1Score = rand() % 5;   /* 0-4 goals, adjust as needed */
