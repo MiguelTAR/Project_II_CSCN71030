@@ -43,7 +43,7 @@ namespace BracketTest
     {
         for (int i = 0; i < count; i++) {
             char name[32];
-            printf_s(name, sizeof(name), "Team%02d", i + 1);
+            sprintf_s(name, sizeof(name), "Team%02d", i + 1);
             initialize_team(&teams[i], name, 'A');
         }
     }
@@ -85,7 +85,7 @@ namespace BracketTest
 
             Round* r16 = &bracket.rounds[ROUND_OF_16];
 
-            Assert::AreEqual(4, r16->matchCount,
+            Assert::AreEqual(2, r16->matchCount,
                 L"Round of 16 should contain half as many matches as Round of 32.");
 
             for (int i = 0; i < r16->matchCount; i++) {

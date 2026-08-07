@@ -69,4 +69,7 @@
   <ItemGroup>
     <Content Include="teams_groups.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="session.log" />
+  </ItemGroup>
 </Project>

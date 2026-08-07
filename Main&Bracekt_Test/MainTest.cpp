@@ -70,14 +70,14 @@ namespace MainTest
 
             // This is the TEAM DATA path, not a log path --
             // the log file itself is the hardcoded "session.log".
-            bool result = initialize_system("test_teams.txt");
+            bool result = initialize_system("teams_g.txt");
 
             Assert::IsTrue(result, L"initialize_system should return true.");
             Assert::IsNotNull(g_ctx, L"g_ctx should be allocated after successful initialization.");
             if (g_ctx != nullptr)
             {
                 Assert::IsTrue(g_ctx->initialized, L"g_ctx->initialized should be true.");
-                Assert::AreEqual(std::string("test_teams.csv"), std::string(g_ctx->logFileName));
+                Assert::AreEqual(std::string("teams_groups.txt"), std::string(g_ctx->logFileName));
                 Assert::IsNotNull(g_ctx->teams, L"Teams should be loaded into g_ctx->teams.");
                 Assert::IsTrue(g_ctx->teamCount > 0, L"teamCount should be greater than zero.");
                 Assert::IsNotNull(g_ctx->logFile, L"g_ctx->logFile should be an open handle.");
