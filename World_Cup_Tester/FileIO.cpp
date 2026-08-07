@@ -3,13 +3,14 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace WorldCupTester
+namespace WorldCup_FileIO_Tester
 {
-	TEST_CLASS(WorldCupTester)
+	TEST_CLASS(WorldCup_FileIO_Tester)
 	{
 	public:
-		
+
 		TEST_METHOD(TestMethod1)
 		{
 		}
 	};
+}

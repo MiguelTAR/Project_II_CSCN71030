@@ -10,8 +10,7 @@ typedef struct Team {
 	int losses;
 	int draws;
 
-	int goal_for;
-	int goal_against;
+	
 } Team;
 
 void initialize_team(Team* team, const char* name, char group);
