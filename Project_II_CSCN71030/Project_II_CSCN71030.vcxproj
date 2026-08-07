@@ -139,11 +139,15 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bracket.c" />
     <ClCompile Include="FileIO.c" />
+    <ClCompile Include="main.c" />
     <ClCompile Include="Team.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bracket.h" />
     <ClInclude Include="FileIO.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Team.h" />
   </ItemGroup>
   <ItemGroup>
