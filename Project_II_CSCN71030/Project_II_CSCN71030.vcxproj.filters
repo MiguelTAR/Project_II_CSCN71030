@@ -15,42 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Team.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FileIO.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Exit.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="match.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="match_sifan.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="match_zuwair.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bracket.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Team.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FileIO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Exit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="match.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bracket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -28,9 +28,8 @@ void printChampion(const Team* champion) {
         return;
     }
     printf("=== CHAMPION: %s (Group %c) ===\n", champion->name, champion->group);
-    printf("Record: %dW-%dD-%dL, GF:%d GA:%d\n",
-        champion->wins, champion->draws, champion->losses,
-        champion->goal_for, champion->goal_against);
+    printf("Record: %dW-%dD-%dL\n",
+        champion->wins, champion->draws, champion->losses);
 }
 
 /*
@@ -173,7 +172,6 @@ void resetSimData(Team teams[], int numTeams, Bracket* bracket) {
     for (int i = 0; i < numTeams; i++) {
         teams[i].matches_played = 0;
         teams[i].wins = teams[i].draws = teams[i].losses = 0;
-        teams[i].goal_for = teams[i].goal_against = 0;
     }
     memset(bracket, 0, sizeof(Bracket));
 }

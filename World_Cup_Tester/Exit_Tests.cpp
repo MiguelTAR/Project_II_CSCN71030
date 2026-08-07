@@ -56,8 +56,6 @@ namespace ExitUtilityTests
             teams[i].group = 'A';
             teams[i].matches_played = 3;
             teams[i].wins = teams[i].draws = teams[i].losses = 1;
-            teams[i].goal_for = 4;
-            teams[i].goal_against = 3;
         }
     }
 
@@ -81,7 +79,6 @@ namespace ExitUtilityTests
             champion.group = 'A';
             champion.matches_played = 7;
             champion.wins = 6; champion.draws = 1; champion.losses = 0;
-            champion.goal_for = 14; champion.goal_against = 3;
 
             printChampion(&champion);
             // reaching this line at all is the pass condition
@@ -267,8 +264,6 @@ namespace ExitUtilityTests
                 Assert::AreEqual(0, teams[i].wins);
                 Assert::AreEqual(0, teams[i].draws);
                 Assert::AreEqual(0, teams[i].losses);
-                Assert::AreEqual(0, teams[i].goal_for);
-                Assert::AreEqual(0, teams[i].goal_against);
             }
             for (int r = 0; r < TOTAL_ROUNDS; r++) {
                 Assert::AreEqual(0, bracket.rounds[r].matchCount);
