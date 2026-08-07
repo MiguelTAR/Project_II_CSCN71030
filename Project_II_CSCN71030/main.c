@@ -10,8 +10,9 @@ static SystemContext *g_ctx = NULL;
 static void print_usage(const char* programName);
 static bool initialize_system(const char* logFileName);
 static void displayMainMenu(void);
-static int  get_menu_selection(void);
 static bool is_valid_selection(int selection);
+static void dispatchSelection(int selection, int* running);
+
 
 
 
@@ -30,7 +31,7 @@ int main(int argc, char *argv[])
 
     /* REQ-MF-010 / REQ-SYS-060: set up resources before anything else runs */
     if (!initialize_system(logFileName)) {
-        fprintf(stderr, "[FATAL] System initialization failed. Cannot continue.\n");
+        fprintf(stderr, "System initialization failed.\n");
         return EXIT_FAILURE;
     }
 
@@ -74,7 +75,7 @@ static bool initilialize_system(const char* logFileName)
      * type instead of relying on a statically allocated struct instance. */
     g_ctx = (SystemContext*)calloc(1, sizeof(SystemContext));
     if (g_ctx == NULL) {
-        fprintf(stderr, "[ERROR] Could not allocate system context.\n");
+        fprintf(stderr, "Could not allocate system context.\n");
         return false;
     }
 
@@ -82,9 +83,9 @@ static bool initilialize_system(const char* logFileName)
     snprintf(g_ctx->logFileName, MAX_LOG_PATH_LEN, "%s", logFileName);
 
     /* REQ-SYS-060: "a+" supports both reading and appending on one handle */
-    g_ctx->logFile = fopen(g_ctx->logFileName, "a+");
+    g_ctx->logFile = fopen_s(g_ctx->logFileName, "a+");
     if (g_ctx->logFile == NULL) {
-        fprintf(stderr, "[ERROR] Could not open log file '%s'.\n", g_ctx->logFileName);
+        fprintf(stderr, "Could not open log file '%s'.\n", g_ctx->logFileName);
         return false; /* cleanup_resources() (already registered) frees g_ctx */
     }
 
@@ -98,7 +99,7 @@ static bool initilialize_system(const char* logFileName)
         anyLines = true;
     }
     if (!anyLines) {
-        printf("  (no previous sessions found)\n");
+        printf(" No previous sessions found\n");
     }
     fseek(g_ctx->logFile, 0, SEEK_END); /* required before switching read->write */
 
@@ -109,6 +110,7 @@ static bool initilialize_system(const char* logFileName)
     g_ctx->initialized = true;
     printf("System initialized successfully.\n");
     return true;
+
 }
 
 
