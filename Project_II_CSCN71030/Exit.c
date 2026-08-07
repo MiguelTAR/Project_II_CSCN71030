@@ -28,7 +28,7 @@ ChampionshipRecord buildChampionshipPath(Match fullHistory[], int numMatches,
     }
 
     int j = 0;
-    for (int i = 0; i < numMatches; i++) {
+    for (int i = 0; i <= numMatches; i++) {
         if (fullHistory[i].team1 == champion || fullHistory[i].team2 == champion) {
             record.path[j++] = fullHistory[i];
         }

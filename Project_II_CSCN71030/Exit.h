@@ -3,7 +3,7 @@
 #define EXIT_H
 
 #include "team.h"
-//#include "bracket.h"
+#include "bracket.h"
 #include "match.h"
 
 typedef struct {
@@ -28,11 +28,11 @@ void freeMatchData(ChampionshipRecord* record);
 int promptUserRestart(void);
 
 void resetSimData(Team teams[],
-    int numTeams
-    Bracket* bracket,
-    );
+    int numTeams,
+    Bracket* bracket
+   );
 
-void cleanupMemory(Team* teams
+void cleanupMemory(Team* teams,
     Bracket* bracket
     );
 
@@ -42,8 +42,8 @@ void exitSim(Team* teams,
     );
 
 void restartSim(Team teams[],
-    int numTeams
-    Bracket* bracket,
+    int numTeams,
+    Bracket* bracket
    );
 
 #endif

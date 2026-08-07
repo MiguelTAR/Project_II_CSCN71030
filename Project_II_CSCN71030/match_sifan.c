@@ -63,7 +63,7 @@ void simulate_group_d(Team group[4])
 
 // Group E 
 
-void simulate_group_l(Team group[4])
+void simulate_group_e(Team group[4])
 {
     Match match;
 
