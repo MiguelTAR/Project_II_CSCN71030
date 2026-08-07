@@ -107,7 +107,7 @@ namespace BracketTest
         TEST_METHOD(ShowsScoreAndWinnerPlayedRound)
         {
             Bracket bracket;
-            BuildBracket(&bracket, 8);
+            BuildBracket(&bracket, 32);
             play_knockout_round(&bracket, ROUND_OF_32);
 
             StdoutCapture capture;
