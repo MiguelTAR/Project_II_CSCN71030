@@ -71,8 +71,7 @@ namespace WorldCup_Team_Tester
 			Assert::IsNull(teams);
 		}
 
-		TEST_METHOD(VALID_GROUPS)
-		{
+		TEST_METHOD(VALID_GROUPS)		{
 			int team_count = 0;
 
 			Team* teams = Load_teams("../Project_II_CSCN71030/teams.txt", &team_count);
