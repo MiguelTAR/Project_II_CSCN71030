@@ -15,49 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Team.c">
+    <ClCompile Include="MainTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileIO.c">
+    <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bracket.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Exit.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="match.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="match_zuwair.c">
+    <ClCompile Include="BracketTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Team.h">
+    <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileIO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bracket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Exit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="match.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="teams_groups.txt" />
   </ItemGroup>
 </Project>

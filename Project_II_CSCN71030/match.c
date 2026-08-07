@@ -5,6 +5,32 @@
 
 #include "match.h"
 
+Team* play_penalty_shootout(Team* team1, Team* team2)
+{
+    int team1_pen, team2_pen;
+
+    printf("\nFull time OVER!! - It's going to penalties!\n");
+    do
+    {
+        team1_pen = rand() % 6;
+        team2_pen = rand() % 6;
+    } while (team1_pen == team2_pen);
+
+    printf("Penalties: %s %d - %d %s\n",
+        team1->name, team1_pen, team2_pen, team2->name);
+
+    if (team1_pen > team2_pen)
+    {
+        printf("%s win on penalties!\n", team1->name);
+        return team1;
+    }
+    else
+    {
+        printf("%s win on penalties!\n", team2->name);
+        return team2;
+    }
+}
+
 //------------------------------------------------------------
 // Simulates one match between two teams by generating
 // random scores and storing the result in the Match structure.
@@ -24,7 +50,7 @@ void simulate_match(Team* team1, Team* team2, Match* match)
     do
     {
         printf("Enter your choice: ");
-        scanf("%d", &match->prediction);
+        scanf_s("%d", &match->prediction);
 
         if (match->prediction < 1 || match->prediction > 3)
         {
@@ -38,55 +64,65 @@ void simulate_match(Team* team1, Team* team2, Match* match)
         // Team 1 wins
         match->team1Score = (rand() % 7) + 1;
         match->team2Score = rand() % match->team1Score;
+        print_match_results(match);
     }
     else if (match->prediction == 2)
     {
         // Team 2 wins
         match->team2Score = (rand() % 7) + 1;
         match->team1Score = rand() % match->team2Score;
+        print_match_results(match);
     }
     else
     {
         // Draw
         int score = rand() % 8;
+        Team* penaltyWinner;
+
+
         match->team1Score = score;
         match->team2Score = score;
+
+        print_match_results(match);
+
+        penaltyWinner = play_penalty_shootout(team1, team2);
+        match->winner = penaltyWinner;
+
     }
 
     update_team_stats(match);
 }
+
+
 
 //------------------------------------------------------------
 // Updates the statistics for both teams after a match.
 //------------------------------------------------------------
 void update_team_stats(Match* match)
 {
-    // Update goals scored and goals conceded
     match->team1->goal_for += match->team1Score;
     match->team1->goal_against += match->team2Score;
 
     match->team2->goal_for += match->team2Score;
     match->team2->goal_against += match->team1Score;
 
-    // Update wins, losses and draws
-    if (prediction == 1)
+    match->team1->matches_played++;
+    match->team2->matches_played++;
+
+    if (match->team1Score > match->team2Score)
     {
-        // Team 1 wins
-        team1Score = (rand() % 5) + 1;   // 1-5
-        team2Score = rand() % team1Score;
+        match->team1->wins++;
+        match->team2->losses++;
     }
-    else if (prediction == 2)
+    else if (match->team2Score > match->team1Score)
     {
-        // Team 2 wins
-        team2Score = (rand() % 5) + 1;
-        team1Score = rand() % team2Score;
+        match->team2->wins++;
+        match->team1->losses++;
     }
     else
     {
-        // Draw
-        int score = rand() % 6;
-        team1Score = score;
-        team2Score = score;
+        match->team1->draws++;
+        match->team2->draws++;
     }
 }
 

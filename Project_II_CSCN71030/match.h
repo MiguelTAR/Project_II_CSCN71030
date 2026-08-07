@@ -2,7 +2,7 @@
 #define MATCH_H
 
 #include <stdio.h>
-#include "team.h"
+#include "Team.h"
 
 //------------------------------------------------------------
 // Match Structure
@@ -17,6 +17,7 @@ typedef struct Match
     int team2Score;
 
     int prediction;
+    Team* winner;
 
 } Match;
 //------------------------------------------------------------
@@ -32,6 +33,8 @@ void update_team_stats(Match* match);
 
 // Displays the result of a completed match
 void print_match_results(const Match* match);
+
+Team* play_penalty_shootout(Team* team1, Team* team2);
 
 //------------------------------------------------------------
 // Group Simulation Functions

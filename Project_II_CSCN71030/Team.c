@@ -4,7 +4,7 @@
 
 void initialize_team(Team* team, const char* name, char group)
 {
-	strcpy(team->name, name);
+	strcpy_s(team->name, sizeof(team->name), name);
 	team->group = group;
 	team->wins = 0;
 	team->losses = 0;

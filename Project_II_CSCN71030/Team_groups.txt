@@ -1,0 +1,41 @@
+A, Brazil
+A, Argentina
+A, France
+A, Germany
+B, Spain
+B, Italy
+B, Portugal
+B, Netherlands
+C, England
+C, Belgium
+C, Croatia
+C, Uruguay
+D, Mexico
+D, USA
+D, Canada
+D, Japan
+E, South Korea
+E, Morocco
+E, Senegal
+E, Ghana
+F, Switzerland
+F, Denmark
+F, Poland
+F, Serbia
+G, Australia
+G, Ecuador
+G, Costa Rica
+G, Wales
+H, Iran
+H, Tunisia
+H, Cameroon
+H, Saudi Arabia
+
+=== Session started ===
+=== Session ended ===
+
+=== Session started ===
+=== Session ended ===
+
+=== Session started ===
+=== Session ended ===

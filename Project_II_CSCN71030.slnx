@@ -3,5 +3,6 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Project Path="Main&amp;Bracekt_Test/Main&amp;Bracekt_Test.vcxproj" />
   <Project Path="Project_II_CSCN71030/Project_II_CSCN71030.vcxproj" Id="75e71af7-d6d8-42dc-8675-a877c17b2c44" />
 </Solution>

@@ -29,7 +29,7 @@ Team* Load_teams(const char* filename, int* team_count)
 		return NULL;
 	}
 
-	Team* teams = malloc(sizeof(Team) * (*team_count));
+	Team* teams = (Team *)malloc(sizeof(Team) * (*team_count));
 
 	if (teams == NULL) {
 		printf("Error allocating memory for teams\n");
@@ -50,14 +50,16 @@ Team* Load_teams(const char* filename, int* team_count)
 		char group;
 		char team_name[50];
 
-		sscanf(line, "%49[^,], %c", &group, team_name);
-		strcpy(teams[index].name, team_name);
+		sscanf_s(line, " %c, %49[^\n\r]", &group, 1, team_name, (unsigned)sizeof(team_name));
+		strcpy_s(teams[index].name, sizeof(teams[index].name), team_name);
 		teams[index].group = group;
 
 		teams[index].matches_played = 0;
 		teams[index].wins = 0;
 		teams[index].losses = 0;
 		teams[index].draws = 0;
+		teams[index].goal_for = 0;
+		teams[index].goal_against = 0;
 
 		index++;
 	}
@@ -73,9 +75,9 @@ void save_results(const char* filename, const Team* teams, int team_count)
 		printf("Error opening file %s for writing\n", filename);
 		return;
 	}
-	fprintf(file, "TEAM, MP, W, L, D%s\n");
-	for(int i = 0; i < team_count; i++) {
-		fprintf(file, "%s, %d, %d, %d, %d\n", teams[i].name, teams[i].matches_played, 
+	fprintf(file, "TEAM, MP, W, L, D\n");
+	for (int i = 0; i < team_count; i++) {
+		fprintf(file, "%s, %d, %d, %d, %d\n", teams[i].name, teams[i].matches_played,
 			teams[i].wins, teams[i].losses, teams[i].draws);
 	}
 	fclose(file);
