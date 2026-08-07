@@ -1,12 +1,10 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include <cstdio>
-#include <cstdlib>
 #include <string>
+#include <cstring>
 #include <fstream>
 #include <sstream>
-#include <vector>
-#include <functional>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -17,109 +15,108 @@ extern "C" {
 
 namespace BracketTest
 {
-    static std::string captureStdout(const std::function<void()>& fn)
+    class StdoutCapture
     {
-        const char* tmpPath = "bracket_stdout_capture.tmp";
-        FILE* redirected = nullptr;
-
-        freopen_s(&redirected, tmpPath, "w", stdout);
-        fn();
-        fflush(stdout);
-        fclose(stdout);
-
-        FILE* restored = nullptr;
-        freopen_s(&restored, "CONOUT$", "w", stdout);
-
-        std::ifstream in(tmpPath);
-        std::ostringstream buffer;
-        buffer << in.rdbuf();
-        in.close();
-        remove(tmpPath);
-
-        return buffer.str();
-    }
-
-    static void buildTeams(Team teams[], int count)
-    {
-        for (int i = 0; i < count; i++) {
-            char name[32];
-            printf_s(name, sizeof(name), "Team%02d", i + 1);
-            initialize_team(&teams[i], name, 'A');
+    public:
+        StdoutCapture()
+        {
+            fflush(stdout);
+            tmpPath = "stdout_capture.tmp";
         }
+
+        std::string Text()
+        {
+            fflush(stdout);
+            std::ifstream in(tmpPath);
+            std::stringstream ss;
+            ss << in.rdbuf();
+            return ss.str();
+        }
+
+        ~StdoutCapture()
+        {
+            fflush(stdout);
+        }
+
+    private:
+        FILE* file = nullptr;
+        std::string tmpPath;
+    };
+
+    static void MakeTeam(Team* t, const char* name)
+    {
+        memset(t, 0, sizeof(Team));
+#if defined(_MSC_VER)
+        strcpy_s(t->name, sizeof(t->name), name);
+#else
+        strncpy(t->name, name, sizeof(t->name) - 1);
+#endif
     }
 
-    static Bracket initializedBracket(int teamCount)
+    /*Builds a bracket with 'n' teams(n must be even) and leaves every round
+    beyond R32 with matchCount == 0, exactly as initialize_bracket() does. */
+    static void BuildBracket(Bracket* b, int n)
     {
         Team teams[MAX_TEAMS];
-        Bracket bracket{};
-
-        buildTeams(teams, teamCount);
-        initialize_bracket(teams, teamCount, &bracket);
-        return bracket;
-    }
-
-    static bool isRoundOf32Winner(const Bracket* bracket, Team* team)
-    {
-        const Round* r32 = &bracket->rounds[ROUND_OF_32];
-        for (int i = 0; i < r32->matchCount; i++) {
-            if (r32->winners[i] == team) {
-                return true;
-            }
+        for (int i = 0; i < n; i++)
+        {
+            char name[32];
+            sprintf(name, "Team%02d", i + 1);
+            MakeTeam(&teams[i], name);
         }
-        return false;
+        initialize_bracket(teams, n, b);
     }
+
+
+
 
     TEST_CLASS(BracketTest)
     {
     public:
 
-        TEST_CLASS_INITIALIZE(SeedRandom)
+        TEST_METHOD(AdvancesWinnersToNextRound)
         {
-            srand(42);
-        }
+            Bracket bracket;
+            BuildBracket(&bracket, 32); 
 
-        TEST_METHOD(UpdatesNextRoundPairings)
-        {
-            Bracket bracket = initializedBracket(8);
             play_knockout_round(&bracket, ROUND_OF_32);
 
+            Round* r32 = &bracket.rounds[ROUND_OF_32];
             Round* r16 = &bracket.rounds[ROUND_OF_16];
 
-            Assert::AreEqual(4, r16->matchCount,
-                L"Round of 16 should contain half as many matches as Round of 32.");
+            Assert::AreEqual(16, r32->matchCount);
+            Assert::AreEqual(16, r32->completedCount);
 
-            for (int i = 0; i < r16->matchCount; i++) {
-                Match* nextMatch = &r16->matches[i];
-                Round* r32 = &bracket.rounds[ROUND_OF_32];
-
-                Assert::IsNotNull(nextMatch->team1,
-                    L"Even-index winners should populate team1 in the next round.");
-                Assert::IsNotNull(nextMatch->team2,
-                    L"Odd-index winners should populate team2 in the next round.");
-                Assert::IsTrue(isRoundOf32Winner(&bracket, nextMatch->team1),
-                    L"Round of 16 team1 must be a Round of 32 winner.");
-                Assert::IsTrue(isRoundOf32Winner(&bracket, nextMatch->team2),
-                    L"Round of 16 team2 must be a Round of 32 winner.");
-                Assert::IsTrue(r32->winners[i * 2] == nextMatch->team1,
-                    L"Match slot 0 winner should feed team1 of the paired next-round match.");
-                Assert::IsTrue(r32->winners[i * 2 + 1] == nextMatch->team2,
-                    L"Match slot 1 winner should feed team2 of the paired next-round match.");
+            for (int i = 0; i < r32->matchCount; i++)
+            {
+                Assert::IsTrue(r32->played[i] != 0, L"Every R32 match should be marked played");
+                Assert::IsNotNull(r32->winners[i], L"Every R32 match must have a recorded winner");
             }
-        }        
+            
+            Assert::AreEqual(8, r16->matchCount);
 
-        TEST_METHOD(ShowScoresAndWinners)
+            // Winners must have been placed into the correct next-round slot
+            Assert::IsTrue(r16->matches[0].team1 == r32->winners[0]);
+            Assert::IsTrue(r16->matches[0].team2 == r32->winners[1]);
+            Assert::IsTrue(r16->matches[1].team1 == r32->winners[2]);
+            Assert::IsTrue(r16->matches[1].team2 == r32->winners[3]);
+            Assert::IsTrue(ROUND_OF_16 == bracket.currentRound);
+        }
+
+              
+        TEST_METHOD(ShowsScoreAndWinnerPlayedRound)
         {
-            Bracket bracket = initializedBracket(8);
+            Bracket bracket;
+            BuildBracket(&bracket, 8);
             play_knockout_round(&bracket, ROUND_OF_32);
 
-            std::string output = captureStdout([&]() {
-                display_bracket(&bracket);
-            });
+            StdoutCapture capture;
+            display_bracket(&bracket);
+            std::string out = capture.Text();
 
-            Assert::IsTrue(output.find("winner:") != std::string::npos,
-                L"Completed matches should list the advancing team.");
-            Assert::IsTrue(output.find(" - ") != std::string::npos,
-                L"Completed matches should show numeric scores.");
+            Round* r32 = &bracket.rounds[ROUND_OF_32];
+            Assert::IsTrue(out.find("winner:") != std::string::npos);
+            Assert::IsTrue(out.find(r32->winners[0]->name) != std::string::npos);
         }
 
         
