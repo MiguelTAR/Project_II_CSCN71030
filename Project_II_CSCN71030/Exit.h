@@ -28,8 +28,8 @@ void freeMatchData(ChampionshipRecord* record);
 int promptUserRestart(void);
 
 void resetSimData(Team teams[],
-    int numTeams
-    Bracket* bracket,
+    int numTeams,
+    Bracket* bracket
     );
 
 void cleanupMemory(Team* teams
@@ -42,8 +42,8 @@ void exitSim(Team* teams,
     );
 
 void restartSim(Team teams[],
-    int numTeams
-    Bracket* bracket,
+    int numTeams,
+    Bracket* bracket
    );
 
 #endif
