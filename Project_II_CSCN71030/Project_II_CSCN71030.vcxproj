@@ -139,6 +139,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bracket.c" />
     <ClCompile Include="Exit.c" />
     <ClCompile Include="FileIO.c" />
     <ClCompile Include="match.c" />
@@ -147,6 +148,7 @@
     <ClCompile Include="Team.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bracket.h" />
     <ClInclude Include="Exit.h" />
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="match.h" />

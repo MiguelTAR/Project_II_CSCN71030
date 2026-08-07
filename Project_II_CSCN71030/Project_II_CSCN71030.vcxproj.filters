@@ -33,6 +33,9 @@
     <ClCompile Include="match_zuwair.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bracket.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Team.h">
@@ -45,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="match.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bracket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
