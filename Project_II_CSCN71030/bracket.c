@@ -78,35 +78,6 @@ void initialize_bracket(Team teams[], int teamCount, Bracket* bracket)
     printf("Bracket initialized: %d teams placed into the %s.\n",
         bracket->teamCount, round_name(ROUND_OF_32));
 }
-
-
-
-
-Team* play_penalty_shootout(Team* team1, Team* team2)
-{
-    int team1_pen, team2_pen;
- 
-    printf("\nFull time score was level - it's going to penalties!\n");
-    do
-    {
-        team1_pen = rand() % 6;   
-        team2_pen = rand() % 6;
-    } while (team1_pen == team2_pen);
- 
-    printf("Penalties: %s %d - %d %s\n",
-        team1->name, team1_pen, team2_pen, team2->name);
- 
-    if (team1_pen > team2_pen)
-    {
-        printf("%s win on penalties!\n", team1->name);
-        return team1;
-    }
-    else
-    {
-        printf("%s win on penalties!\n", team2->name);
-        return team2;
-    }
-}
  
 
 
@@ -122,6 +93,24 @@ void advance_winner(Bracket* bracket, Match* match)
     Team* winner;
 
     if (bracket == NULL || match == NULL) {
+        return;
+    }
+
+    for (round = ROUND_OF_32; round <= FINAL_ROUND; round++) {
+        Round* r = &bracket->rounds[round];
+        for (int i = 0; i < r->matchCount; i++) {
+            if (&r->matches[i] == match) {
+                foundRound = round;
+                slot = i;
+                break;
+            }
+        }
+        if (foundRound >= 0) {
+            break;
+        }
+    }
+
+    if (foundRound < 0) {
         return;
     }
 
@@ -193,19 +182,14 @@ void play_knockout_round(Bracket* bracket, int round)
 
         } else {
 
-            /* Hand off to the Match Simulation Module for the result */
-            simulate_match(m->team1, m->team2, m);
-            print_match_results(m);
- 
-            if (m->team1Score == m->team2Score) {
+            /* Randomly roll scores until someone actually wins */
+            do {
+                m->team1Score = rand() % 5;   /* 0-4 goals, adjust as needed */
+                m->team2Score = rand() % 5;
+            } while (m->team1Score == m->team2Score);
 
-                return play_penalty_shootout(m->team1, m->team2);
-              
-            } else {
-                r->winners[i] = (m->team1Score > m->team2Score) ? m->team1 : m->team2;
-            }
+            r->winners[i] = (m->team1Score > m->team2Score) ? m->team1 : m->team2;
             r->played[i] = 1;
- 
             printf("%s advances\n", r->winners[i]->name);
         }
  
@@ -221,10 +205,6 @@ void play_knockout_round(Bracket* bracket, int round)
         printf("\nThe Final has been completed.\n");
     }
 }
-
-
-
-
 
 
 void display_bracket(Bracket* bracket)

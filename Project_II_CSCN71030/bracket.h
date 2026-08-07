@@ -39,7 +39,6 @@ void  initialize_bracket(Team teams[], int teamCount, Bracket* bracket);
 void  advance_winner(Bracket* bracket, Match* match);
 void  play_knockout_round(Bracket* bracket, int round);
 void  display_bracket(Bracket* bracket);
-Team* play_penalty_shootout(Team* team1, Team* team2);
 Team* determine_champion(Bracket* bracket);
 
 

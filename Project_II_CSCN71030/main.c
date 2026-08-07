@@ -2,19 +2,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+
 #include "main.h"
 #include "Team.h"
+#include "FileIO.h"
+#include "match.h"
+#include "bracket.h"
+//#include "Exit.h"
 
 static SystemContext *g_ctx = NULL;
 
-static void print_usage(const char* programName);
 static bool initialize_system(const char* logFileName);
+static void cleanup_system(void);
 static void displayMainMenu(void);
 static bool is_valid_selection(int selection);
 static void dispatchSelection(int selection, int* running);
 
-
-
+static void load_teams(void);
+static void predict_match(void);
+static void simulate_tournament(void);
 
 
 int main(int argc, char *argv[])
@@ -29,7 +35,7 @@ int main(int argc, char *argv[])
         logFileName = argv[1];
     }
 
-    /* REQ-MF-010 / REQ-SYS-060: set up resources before anything else runs */
+    /* REQ-SYS-060: Set up resources before anything else runs */
     if (!initialize_system(logFileName)) {
         fprintf(stderr, "System initialization failed.\n");
         return EXIT_FAILURE;
@@ -41,98 +47,102 @@ int main(int argc, char *argv[])
         /* REQ-MF-020 / REQ-MI-010: show all available options every pass */
         displayMainMenu();
 
-        /* REQ-MF-030: accept the user's choice via a validated input method */
         int selection = get_menu_selection();
 
-        /* REQ-MF-040 / REQ-MI-030: reject bad input and let the user retry */
         if (!is_valid_selection(selection)) {
             printf("\n Invalid selection. Please enter a number between %1 and %3.\n");
-            continue; /* redisplay the menu and try again */
+            continue; /* Redisplay the menu and try again */
         }
-
-        /* REQ-MF-050 / REQ-MI-020: hand control to the chosen module */
         dispatch_selection(selection, &running);
     }
 
-    return;
-
+    cleanup_system();
+    return EXIT_SUCCESS;
 }
-
-
-static void print_usage(const char* programName)
-{
-    printf("Usage: %s [log_file_path]\n", programName);
-    printf("  log_file_path   Optional path for the session log (default: %s)\n",
-        DEFAULT_LOG_FILE);
-}
-
-
 
 
 static bool initilialize_system(const char* logFileName)
 {
-    /* REQ-SYS-030 / REQ-SYS-050: heap-allocate the complex system-state
+    /* REQ-SYS-030 / REQ-SYS-050: Heap-allocate the complex system-state
      * type instead of relying on a statically allocated struct instance. */
+
     g_ctx = (SystemContext*)calloc(1, sizeof(SystemContext));
     if (g_ctx == NULL) {
         fprintf(stderr, "Could not allocate system context.\n");
         return false;
     }
 
-
     snprintf(g_ctx->logFileName, MAX_LOG_PATH_LEN, "%s", logFileName);
 
-    /* REQ-SYS-060: "a+" supports both reading and appending on one handle */
-    g_ctx->logFile = fopen_s(g_ctx->logFileName, "a+");
+    /* REQ-SYS-060: Supports both reading and appending on one handle */
+    g_ctx->logFile = fopen_s(&g_ctx->logFile, g_ctx->logFileName, "a+");
     if (g_ctx->logFile == NULL) {
         fprintf(stderr, "Could not open log file '%s'.\n", g_ctx->logFileName);
-        return false; /* cleanup_resources() (already registered) frees g_ctx */
+        return false;
     }
-
-    /* REQ-SYS-060: read the file back to prove read + write both work */
-    printf("Previous session log (%s):\n", g_ctx->logFileName);
-    rewind(g_ctx->logFile);
-    char line[INPUT_BUFFER_SIZE];
-    bool anyLines = false;
-    while (fgets(line, sizeof(line), g_ctx->logFile) != NULL) {
-        printf("  %s", line);
-        anyLines = true;
-    }
-    if (!anyLines) {
-        printf(" No previous sessions found\n");
-    }
-    fseek(g_ctx->logFile, 0, SEEK_END); /* required before switching read->write */
-
 
     fprintf(g_ctx->logFile, "\n=== Session started ===");
     fflush(g_ctx->logFile);
 
+    g_ctx->teams = Load_teams(g_ctx->logFileName, &g_ctx->teamCount);
+    if (g_ctx->teams == NULL) {
+        fprintf(stderr, "Could not load teams from '%s'.\n", g_ctx->logFileName);
+        cleanup_system();
+        return false;
+    }
+
     g_ctx->initialized = true;
-    printf("System initialized successfully.\n");
+    printf("Initialized successfully.\n");
     return true;
 
 }
 
+static void cleanup_system(void)
+{
+    if (g_ctx == NULL) {
+        return;
+    }
 
+    if (g_ctx->logFile != NULL) {
+        fprintf(g_ctx->logFile, "=== Session ended ===\n");
+        fclose(g_ctx->logFile);
+        g_ctx->logFile = NULL;
+    }
 
+    free_teams(g_ctx->teams);
+    g_ctx->teams = NULL;
+    free(g_ctx);
+    g_ctx = NULL;
+}
 
 
 
 static void displayMainMenu()
 {
-
-    printf("------------------------------------------------\n");
+    printf("\n------------------------------------------------\n");
     printf("            MATCH PREDICTOR - MAIN MENU         \n");
-    printf("________________________________________________\n");
+    printf("------------------------------------------------\n");
     printf("1. Manage Teams\n");
     printf("2. Predict a Match\n");
     printf("3. Simulate a Tournament\n");
-    printf("Select an Option: \n");
-  
-    printf("_________________________________________________\n");
+    printf("4. Exit\n");
+    printf("------------------------------------------------\n");
+    printf("Select an Option: ");
 }
 
 
+int get_menu_selection(void)
+{
+    int selection = 0;
+    if (scanf_s("%d", &selection) != 1) {
+        while (getchar() != '\n') {
+        }
+        return -1;
+    }
+    while (getchar() != '\n') {
+    }
+    return selection;
+}
 
 
 static int isValidSelection(int selection)
@@ -140,6 +150,44 @@ static int isValidSelection(int selection)
     return selection >= 1 && selection <= MENU_COUNT;
 }
 
+static void load_teams(void)
+{
+    if (g_ctx == NULL || g_ctx->teams == NULL) {
+        printf("No teams loaded.\n");
+        return;
+    }
+
+    printf("\n--- Loaded Teams (%d) ---\n", g_ctx->teamCount);
+    print_all(g_ctx->teams, g_ctx->teamCount);
+}
+
+
+static void simulate_tournament(void)
+{
+    Bracket bracket;
+    int round;
+
+    if (g_ctx == NULL || g_ctx->teams == NULL || g_ctx->teamCount < 2) {
+        printf("Need at least 2 teams loaded to simulate a tournament.\n");
+        return;
+    }
+
+    initialize_bracket(g_ctx->teams, g_ctx->teamCount, &bracket);
+
+    for (round = ROUND_OF_32; round <= FINAL_ROUND; round++) {
+        if (bracket.rounds[round].matchCount == 0) {
+            continue;
+        }
+        play_knockout_round(&bracket, round);
+    }
+
+    display_bracket(&bracket);
+
+    Team* champion = determine_champion(&bracket);
+    if (champion == NULL) {
+        printf("Tournament finished without a champion.\n");
+    }
+}
 
 static void dispatchSelection(int selection, int* running)
 {
@@ -155,7 +203,7 @@ static void dispatchSelection(int selection, int* running)
         break;
     case 4:
         if (confirmExit()) {
-            *running = 0;
+            *running = false;
         }
         break;
     default:
@@ -163,4 +211,17 @@ static void dispatchSelection(int selection, int* running)
     }
 }
 
+bool confirmExit(void)
+{
+    int choice = 0;
+    printf("\nAre you sure you want to exit? (1 = yes, 0 = no): ");
+    if (scanf_s("%d", &choice) != 1) {
+        while (getchar() != '\n') {
+        }
+        return false;
+    }
+    while (getchar() != '\n') {
+    }
+    return choice == 1;
+}
 
