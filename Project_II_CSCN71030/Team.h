@@ -12,7 +12,6 @@ typedef struct Team {
 
 	int goal_for;
 	int goal_against;
-	int roundReached;
 } Team;
 
 void initialize_team(Team* team, const char* name, char group);
