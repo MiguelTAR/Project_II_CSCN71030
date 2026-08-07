@@ -114,7 +114,7 @@ static void displayMainMenu(void)
     printf("\n------------------------------------------------\n");
     printf("            MATCH PREDICTOR - MAIN MENU         \n");
     printf("------------------------------------------------\n");
-    printf("1. Manage Teams\n");
+    printf("1. Display Teams\n");
     printf("2. Predict a Match\n");
     printf("3. Simulate a Tournament\n");
     printf("4. Exit\n");
